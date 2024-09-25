@@ -3,17 +3,14 @@ import HeroCard from '@/components/HeroCard.vue'
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HeroCard />
-    </div>
-  </header>
-
   <main>
-    <TheWelcome />
+    <h2 class="logo">smOk</h2>
+    <HeroCard />
   </main>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.logo {
+  margin: 20px;
+}
 </style>
