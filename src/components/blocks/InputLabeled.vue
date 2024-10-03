@@ -10,7 +10,7 @@
     >
       <q-input
         class="input-labeled__input"
-        :type
+        :type="calculateType(type)"
         :id
         :label
         name="id"
@@ -51,6 +51,7 @@ interface Props {
   modifier?: number
   calculatingBase?: number
   basis?: number
+  lengthy?: boolean
 }
 
 const emit = defineEmits(['update:inputData'])
@@ -72,10 +73,13 @@ const limitData = (): void => {
 }
 
 const rules = [
-  (val: any) => (val !== 'undefined' && val !== null && val !== '') || 'Value cannot be empty',
-  (val: any) => {
-    if (maxValue.value) {
+  (val: string | number) =>
+    props.lengthy || (val !== 'undefined' && val !== null && val !== '') || 'Value cannot be empty',
+  (val: string | number) => {
+    if (typeof val === 'number' && maxValue.value) {
       return val <= Number(maxValue.value) || 'Input must be lower or equal to the max value'
+    } else {
+      return true
     }
   }
 ]
@@ -104,6 +108,11 @@ const modifiedInputData = computed({
     emit('update:inputData', value)
   }
 })
+
+const calculateType = (type: 'text' | 'number'): 'text' | 'number' | 'textarea' => {
+  if (type !== 'text') return type
+  return props.lengthy ? 'textarea' : 'text'
+}
 </script>
 
 <style lang="scss">
@@ -112,10 +121,6 @@ const modifiedInputData = computed({
   position: relative;
 
   &__wrapper {
-    > * {
-      width: 50%;
-    }
-
     &:has(.input-labeled__max) {
       width: 100%;
       display: flex;
