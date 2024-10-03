@@ -1,25 +1,46 @@
 <template>
   <div class="hero-card">
-    <InputLabeled
-      v-for="item in heroData"
-      :key="item.id"
-      :type="item.type"
-      :id="item.id"
-      :label="item.label"
-      :basis="item.basis"
-      :modifier="item.modifier"
-      v-model:inputData="item.value"
-      v-model:maxValue="item.maxValue"
-    />
-    <q-btn outline color="primary" @click="submit">Submit</q-btn>
+    <template v-for="item in heroData" :key="item.id">
+      <InputLabeled
+        v-if="typeof item.value !== 'object'"
+        :type="item.type"
+        :id="item.id"
+        :label="item.label"
+        :basis="item.basis"
+        :modifier="item.modifier"
+        :lengthy="item.lengthy"
+        v-model:inputData="item.value"
+        v-model:maxValue="item.maxValue"
+      />
+      <div v-else>
+        <label>{{ item.label }}</label>
+        <q-checkbox
+          v-for="(val, key) in item.value"
+          :key
+          v-model="item.value[key]"
+          :id="item.label + key"
+          name="id"
+        />
+      </div>
+    </template>
+    <div class="hero-card__sticky-button-wrapper">
+      <q-btn fab icon="fa-solid fa-save" color="primary" @click="submit" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import InputLabeled from '@/components/blocks/InputLabeled.vue'
-import type { HeroData } from "@/components/HeroCard.types"
-import { reactive } from 'vue'
+import type { HeroData } from '@/components/HeroCard.types'
+import { HeroDataModel } from '@/models/HeroCard.model'
+import { onMounted, reactive } from 'vue'
+import { supabase } from '@/lib/supabaseClient.js'
 
+interface Props {
+  userId: string
+}
+
+const props = defineProps<Props>()
 
 const heroData: Record<string, HeroData> = reactive({
   name: {
@@ -133,31 +154,42 @@ const heroData: Record<string, HeroData> = reactive({
   },
   resources: {
     id: 'resources',
-    value: 0,
-    maxValue: 0,
+    value: [false, true, true, true, false, false],
     label: 'Zapasy',
     type: 'number'
   },
   tools: {
     id: 'tools',
-    value: 0,
-    maxValue: 0,
+    value: [false, false, false],
     label: 'Narzędzia',
     type: 'number'
   },
   components: {
     id: 'components',
-    value: 0,
-    maxValue: 0,
+    value: [false, false, false],
     label: 'Komponenty',
     type: 'number'
   },
   backpack: {
     id: 'backpack',
-    value: 0,
-    maxValue: 0,
+    value: '',
     label: 'Plecak',
-    type: 'number'
+    type: 'text',
+    lengthy: true
+  },
+  proficiency: {
+    id: 'proficiency',
+    value: '',
+    label: 'Biegłość',
+    type: 'text',
+    lengthy: true
+  },
+  notes: {
+    id: 'notes',
+    value: '',
+    label: 'Notatki',
+    type: 'text',
+    lengthy: true
   },
   knife: {
     id: 'knife',
@@ -167,6 +199,52 @@ const heroData: Record<string, HeroData> = reactive({
   }
 })
 
-const submit = (): void => {}
+const submit = (): void => {
+  const payload = new HeroDataModel(heroData, props.userId)
+  setHero(payload)
+}
 
+const assignHeroDataValues = (data: Record<string, any>): void => {
+  for (const key in data) {
+    if (heroData[key]) {
+      heroData[key].value = data[key].value
+    }
+  }
+}
+
+const setHero = async (payload: HeroDataModel): Promise<void> => {
+  try {
+    await supabase.from('herodata').upsert(payload)
+  } catch (err) {
+    console.error(err)
+    alert('Something went wrong, please refresh the page and try again.')
+  }
+}
+
+const fetchAndAssignHeroData = async (): Promise<void> => {
+  try {
+    const { data } = await supabase.from('herodata').select().eq('user_id', props.userId)
+    assignHeroDataValues(data[0])
+  } catch (err) {
+    console.error(err)
+    alert('Something went wrong, please refresh the page.')
+  }
+}
+
+onMounted(async () => {
+  await fetchAndAssignHeroData()
+})
 </script>
+
+<style lang="scss" scoped>
+.hero-card {
+  margin: 20px;
+
+  &__sticky-button-wrapper {
+    position: sticky;
+    bottom: 30px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+</style>
