@@ -180,7 +180,28 @@ const heroData: Record<string, HeroData> = reactive({
   proficiency: {
     id: 'proficiency',
     value: '',
-    label: 'Biegłość',
+    label: 'Biegłości do nauczenia',
+    type: 'text',
+    lengthy: true
+  },
+  proficiency_to_be_learned: {
+    id: 'proficiency_to_be_learned',
+    value: '',
+    label: 'Biegłości',
+    type: 'text',
+    lengthy: true
+  },
+  expertise: {
+    id: 'expertise',
+    value: '',
+    label: 'Ekspertyzy',
+    type: 'text',
+    lengthy: true
+  },
+  expertise_to_be_learned: {
+    id: 'expertise_to_be_learned',
+    value: '',
+    label: 'Ekspertyzy  do nauczenia',
     type: 'text',
     lengthy: true
   },
@@ -195,6 +216,12 @@ const heroData: Record<string, HeroData> = reactive({
     id: 'knife',
     value: true,
     label: 'Nóż',
+    type: 'boolean'
+  },
+  inspiration: {
+    id: 'inspiration',
+    value: true,
+    label: 'Inspiracja',
     type: 'boolean'
   }
 })
