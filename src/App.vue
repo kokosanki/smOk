@@ -2,18 +2,19 @@
 import { onMounted, ref } from 'vue'
 import HeroCard from '@/components/HeroCard.vue'
 import Auth from '@/components/Auth.vue'
-import { supabase } from '@/lib/supabaseClient.js'
+import { supabase } from '@/lib/supabaseClient'
+import type { Session } from '@supabase/supabase-js'
 
 const session = ref()
 const isLoading = ref(true)
-const userId = ref(null)
+const userId = ref()
 
 const initAuth = async () => {
   try {
     const { data } = await supabase.auth.getSession()
     session.value = data.session
 
-    await supabase.auth.onAuthStateChange((_: unknown, _session: string) => {
+    await supabase.auth.onAuthStateChange((_: unknown, _session: Session | null) => {
       session.value = _session
     })
   } catch (err) {

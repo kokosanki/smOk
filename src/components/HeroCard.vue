@@ -34,7 +34,7 @@ import InputLabeled from '@/components/blocks/InputLabeled.vue'
 import type { HeroData } from '@/components/HeroCard.types'
 import { HeroDataModel } from '@/models/HeroCard.model'
 import { onMounted, reactive } from 'vue'
-import { supabase } from '@/lib/supabaseClient.js'
+import { supabase } from '@/lib/supabaseClient'
 
 interface Props {
   userId: string
@@ -251,7 +251,9 @@ const setHero = async (payload: HeroDataModel): Promise<void> => {
 const fetchAndAssignHeroData = async (): Promise<void> => {
   try {
     const { data } = await supabase.from('herodata').select().eq('user_id', props.userId)
-    assignHeroDataValues(data[0])
+    if (data) {
+      assignHeroDataValues(data[0])
+    }
   } catch (err) {
     console.error(err)
     alert('Something went wrong, please refresh the page.')
