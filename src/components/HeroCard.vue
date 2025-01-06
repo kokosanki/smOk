@@ -35,12 +35,15 @@ import type { HeroData } from '@/components/HeroCard.types'
 import { HeroDataModel } from '@/models/HeroCard.model'
 import { onMounted, reactive } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
+import { useQuasar } from 'quasar'
 
 interface Props {
   userId: string
 }
 
 const props = defineProps<Props>()
+
+const $q = useQuasar()
 
 const heroData: Record<string, HeroData> = reactive({
   name: {
@@ -242,9 +245,16 @@ const assignHeroDataValues = (data: Record<string, any>): void => {
 const setHero = async (payload: HeroDataModel): Promise<void> => {
   try {
     await supabase.from('herodata').upsert(payload)
+    $q.notify({
+      type: 'positive',
+      message: 'Changes saved successfully.'
+    })
   } catch (err) {
     console.error(err)
-    alert('Something went wrong, please refresh the page and try again.')
+    $q.notify({
+      type: 'negative',
+      message: 'Something went wrong, please refresh the page and try again.'
+    })
   }
 }
 
@@ -256,7 +266,10 @@ const fetchAndAssignHeroData = async (): Promise<void> => {
     }
   } catch (err) {
     console.error(err)
-    alert('Something went wrong, please refresh the page.')
+    $q.notify({
+      type: 'negative',
+      message: 'Something went wrong, please refresh the page and try again.'
+    })
   }
 }
 
