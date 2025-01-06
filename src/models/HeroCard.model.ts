@@ -64,6 +64,9 @@ export class HeroDataModel {
   backpack: BasicProperty
   knife: BasicProperty
   proficiency: BasicProperty
+  proficiency_to_be_learned: BasicProperty
+  expertise: BasicProperty
+  expertise_to_be_learned: BasicProperty
   notes: BasicProperty
   user_id: string
 
@@ -82,7 +85,7 @@ export class HeroDataModel {
     this.gold = getBasicProperty(heroData.gold)
     this.ammunition = getBasicProperty(heroData.ammunition)
     this.torch = getBasicProperty(heroData.torch)
-    this.movement = getBasedMovement(heroData.movement)
+    this.movement = getBasedMovement(heroData.speed)
     this.mana = getPropertyWithMaxValue(heroData.mana)
     this.hp = getPropertyWithMaxValue(heroData.hp)
     this.resources = getBasicProperty(heroData.resources)
@@ -91,6 +94,9 @@ export class HeroDataModel {
     this.backpack = getBasicProperty(heroData.backpack)
     this.knife = getBasicProperty(heroData.knife)
     this.proficiency = getBasicProperty(heroData.proficiency)
+    this.proficiency_to_be_learned = getBasicProperty(heroData.proficiency_to_be_learned)
+    this.expertise = getBasicProperty(heroData.expertise)
+    this.expertise_to_be_learned = getBasicProperty(heroData.expertise_to_be_learned)
     this.notes = getBasicProperty(heroData.notes)
     this.user_id = userId
   }
