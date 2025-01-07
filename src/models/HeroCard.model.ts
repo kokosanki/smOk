@@ -32,14 +32,6 @@ const getPropertyWithMaxValue = ({ id, value, maxValue }: HeroData): PropertyWit
   }
 }
 
-const getBasedMovement = ({ id, modifier }: HeroData): BasedProperty => {
-  return {
-    id,
-    basis: 'speed',
-    modifier: modifier!
-  }
-}
-
 export class HeroDataModel {
   name: BasicProperty
   race: BasicProperty
@@ -55,7 +47,6 @@ export class HeroDataModel {
   gold: BasicProperty
   ammunition: BasicProperty
   torch: BasicProperty
-  movement: BasedProperty
   mana: PropertyWithMaxValue
   hp: PropertyWithMaxValue
   resources: BasicProperty
@@ -85,7 +76,6 @@ export class HeroDataModel {
     this.gold = getBasicProperty(heroData.gold)
     this.ammunition = getBasicProperty(heroData.ammunition)
     this.torch = getBasicProperty(heroData.torch)
-    this.movement = getBasedMovement(heroData.speed)
     this.mana = getPropertyWithMaxValue(heroData.mana)
     this.hp = getPropertyWithMaxValue(heroData.hp)
     this.resources = getBasicProperty(heroData.resources)
