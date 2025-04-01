@@ -11,12 +11,6 @@ interface PropertyWithMaxValue {
   maxValue: number
 }
 
-interface BasedProperty {
-  id: string
-  basis: string
-  modifier: number
-}
-
 const getBasicProperty = ({ id, value }: HeroData): BasicProperty => {
   return {
     id,
@@ -54,6 +48,7 @@ export class HeroDataModel {
   components: BasicProperty
   backpack: BasicProperty
   knife: BasicProperty
+  inspiration: BasicProperty
   proficiency: BasicProperty
   proficiency_to_be_learned: BasicProperty
   expertise: BasicProperty
@@ -83,6 +78,7 @@ export class HeroDataModel {
     this.components = getBasicProperty(heroData.components)
     this.backpack = getBasicProperty(heroData.backpack)
     this.knife = getBasicProperty(heroData.knife)
+    this.inspiration = getBasicProperty(heroData.inspiration)
     this.proficiency = getBasicProperty(heroData.proficiency)
     this.proficiency_to_be_learned = getBasicProperty(heroData.proficiency_to_be_learned)
     this.expertise = getBasicProperty(heroData.expertise)
