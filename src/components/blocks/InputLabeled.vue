@@ -9,6 +9,19 @@
       v-else-if="type !== 'boolean' && typeof modifiedInputData !== 'boolean'"
     >
       <q-input
+        v-if="type === 'number'"
+        class="input-labeled__input"
+        :type="calculateType(type)"
+        :id
+        :label
+        name="id"
+        v-model.number="modifiedInputData"
+        :disabled
+        @blur="limitData"
+        :rules
+      />
+      <q-input
+        v-else
         class="input-labeled__input"
         :type="calculateType(type)"
         :id
